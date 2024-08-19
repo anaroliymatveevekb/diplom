@@ -1,0 +1,46 @@
+[nginx_servers]
+158.160.14.106
+51.250.92.129
+
+
+
+[grafana_server]
+51.250.87.66
+
+[prometheus_server]
+51.250.78.165
+
+[node-exporters]
+158.160.14.106
+51.250.92.129
+
+
+
+
+
+[elastic_server]
+158.160.37.247
+
+[kibana_server]
+51.250.6.17
+
+[filebeat_node]
+158.160.14.106
+51.250.92.129
+
+
+
+[all:vars]
+ansible_user=user
+ansible_ssh_private_key_file=../ssh_key/key2
+
+
+
+
+#grafana_moonitor_ip_pub = ""
+#nginx_server1_ip_pub = ""
+#nginx_server2_ip_pub = ""
+#promethmonitor_ip_pub = "v"
+
+
+

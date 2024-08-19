@@ -1,0 +1,138 @@
+---
+
+- name: Setting up Prometheus
+  hosts: prometheus_server
+  become: yes
+
+
+  tasks:
+  - name: Создание группы
+    group:
+      name: prometheus
+      state: present
+  - name: Create user prometheus
+    ansible.builtin.user:
+      name: prometheus
+      shell: /bin/bash
+      group: prometheus
+      create_home: false  
+        
+  - name: Download prometheus
+    ansible.builtin.get_url:  
+      url: https://github.com/prometheus/prometheus/releases/download/v2.44.0-rc.2/prometheus-2.44.0-rc.2.linux-amd64.tar.gz  
+      dest: /home/user/
+
+  - name: Unpackung tar.gz
+    unarchive:
+      src: /home/user/prometheus-2.44.0-rc.2.linux-amd64.tar.gz
+      dest: . 
+      remote_src: yes
+
+
+  - name: Create dir in etc for prometheus
+    file:
+      path: /etc/prometheus
+      state: directory
+      owner: prometheus
+      group: prometheus 
+
+  - name: Create dir in /var/lib/ for prometheus      
+    file: 
+      path: 
+        /var/lib/prometheus
+      state: directory
+      owner: prometheus
+      group: prometheus 
+
+
+  - name: Copy main files for prometheus
+    copy:
+      src: /home/user/prometheus-2.44.0-rc.2.linux-amd64/promtool
+      dest: /usr/local/bin/
+      remote_src: yes  
+      mode: preserve
+      owner: prometheus
+      group: prometheus 
+
+  - name: Copy 2  
+    copy:     
+      src: /home/user/prometheus-2.44.0-rc.2.linux-amd64/prometheus
+      dest: /usr/local/bin/
+      remote_src: yes 
+      mode: preserve
+      owner: prometheus
+      group: prometheus 
+
+
+  - name: Copy console_libraries 
+    copy:     
+      src: /home/user/prometheus-2.44.0-rc.2.linux-amd64/console_libraries 
+      dest: /etc/prometheus
+      remote_src: yes 
+      mode: preserve
+      owner: prometheus
+      group: prometheus
+        #      recursive: yes
+
+  - name: Copy consoles 
+    copy:     
+      src: /home/user/prometheus-2.44.0-rc.2.linux-amd64/consoles
+      dest: /etc/prometheus
+      remote_src: yes 
+      mode: preserve
+      owner: prometheus
+      group: prometheus
+        #      recursive: yes
+
+  - name: Copy console_libraries 
+    copy:     
+      src: /home/user/prometheus-2.44.0-rc.2.linux-amd64/prometheus.yml
+      dest: /etc/prometheus
+      remote_src: yes 
+      mode: preserve
+      owner: prometheus
+      group: prometheus
+
+#----------
+#---------
+#----------
+
+  - name: Copy service file to server
+    copy:
+      src: ../prometheus_files/prometheus.service
+      dest: /etc/systemd/system
+
+  - name: Systemctl enable for prometheus
+    systemd: 
+      name: prometheus.service 
+      enabled: true
+
+  - name: Systemctl start for prometheus
+    systemd: 
+      name: prometheus.service 
+      state: started
+
+  - name: Get status of prometheus service
+    systemd:
+      name: prometheus.service
+      enabled: yes
+    register: prometheus_status
+  - debug:
+      var: prometheus_status 
+#----------
+#---------
+#----------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
