@@ -80,7 +80,7 @@ ansible --version
 
 Протестируйте сайт curl -v <публичный IP балансера>:80
 ![](./img/balans.JPG)
-![](./img/balans 2.JPG)
+![](./img/balans2.JPG)
 
 
 
